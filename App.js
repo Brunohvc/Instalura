@@ -1,13 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { Fragment, useState, useEffect } from 'react';
+import { StyleSheet, View, ScrollView, FlatList } from 'react-native';
+import { Header } from './src/componentes/Header';
+import { PostedImage } from './src/componentes/PostedImage';
+import getPhotos from './src/api/feed';
+import { Comments } from './src/componentes/Comments';
 
-export default function App() {
+const informacoes = [
+  { nome: 'Ricardo', img: './res/img/alura.jpg' },
+  { nome: 'Marina', img: './res/img/alura.jpg' },
+];
+
+const App = () => {
+  const [fotos, setFotos] = useState([]);
+
+  useEffect(() => {
+    getPhotos(setFotos);
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <ScrollView >
+      <View style={styles.container}>
+        <FlatList
+          data={fotos}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) =>
+            <Fragment>
+              <Header
+                nome={item.userName}
+                urlImage={item.userURL}
+              />
+              <PostedImage
+                urlImage={item.url}
+                descricao={item.description}
+                qntLikes={item.likes}
+              />
+              <Comments startComments={item.comentarios} />
+            </Fragment>
+          }
+        />
+      </View>
+    </ScrollView>
   );
 }
 
@@ -17,5 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+  }
 });
+
+export default App;
