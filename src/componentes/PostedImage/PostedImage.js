@@ -3,26 +3,17 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 import style from './style';
 
 
-const PostedImage = ({ urlImage, descricao, qntLikes }) => {
+const PostedImage = ({ urlImage, descricao, qntLikes, getImgLike, likePhoto }) => {
 
     const [like, setLike] = useState(false);
     const [likes, setLikes] = useState(qntLikes);
 
-    const likePhoto = () => {
-        if (like) {
-            setLikes(likes - 1)
-        } else {
-            setLikes(likes + 1)
-        }
-        setLike(!like);
+    const clickLikePhoto = () => {
+        const [newLike, newLlikes] = likePhoto(like, likes)
+        setLikes(newLlikes)
+        setLike(newLike)
     }
 
-    const getImgLike = (like) => {
-        if (like == true) {
-            return require('../../../res/img/s2-checked.png');
-        }
-        return require('../../../res/img/s2.png');
-    };
 
     return (
         <Fragment>
@@ -30,7 +21,7 @@ const PostedImage = ({ urlImage, descricao, qntLikes }) => {
                 style={style.image} />
             <Text>{descricao}</Text>
             <View style={style.viewLike}>
-                <TouchableOpacity onPress={likePhoto}>
+                <TouchableOpacity onPress={clickLikePhoto}>
                     <Image source={getImgLike(like)}
                         style={style.like} />
                 </TouchableOpacity>
